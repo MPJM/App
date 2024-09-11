@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Medicamentos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f8;
+            color: #333;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+        .result p {
+            margin: 0;
+        }
+        .form-section {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Calculadora de Medicamentos</h1>
+
+    <form id="medicine-form">
+        <div class="form-section">
+            <label for="current-dose">Dosis actual del comprimido (mg):</label>
+            <input type="number" step="0.01" id="current-dose" placeholder="Ej. 0.5mg" required>
+        </div>
+
+        <div class="form-section">
+            <label for="dose-per-day">Dosis diaria necesaria (mg):</label>
+            <input type="number" step="0.01" id="dose-per-day" placeholder="Ej. 1.5mg" required>
+        </div>
+
+        <div class="form-section">
+            <label for="days">Días de suministro:</label>
+            <input type="number" id="days" value="30" required>
+        </div>
+
+        <div class="form-section">
+            <label for="tablets-per-blister">Cantidad de pastillas por blister:</label>
+            <input type="number" id="tablets-per-blister" placeholder="Ej. 10 pastillas por blister" required>
+        </div>
+
+        <button type="submit">Calcular Blisters y Pastillas</button>
+    </form>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        document.getElementById('medicine-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            const currentDose = parseFloat(document.getElementById('current-dose').value);
+            const dosePerDay = parseFloat(document.getElementById('dose-per-day').value);
+            const days = parseInt(document.getElementById('days').value);
+            const tabletsPerBlister = parseInt(document.getElementById('tablets-per-blister').value);
+            let resultMessage = "";
+
+            if (isNaN(currentDose) || isNaN(dosePerDay) || isNaN(days) || isNaN(tabletsPerBlister)) {
+                resultMessage = "<p>Por favor, completa todos los campos correctamente.</p>";
+            } else {
+                // Calculo de la cantidad total de comprimidos necesarios
+                const totalTablets = Math.ceil((dosePerDay / currentDose) * days);
+
+                // Calculo de blisters completos y pastillas sueltas
+                const fullBlisters = Math.floor(totalTablets / tabletsPerBlister);
+                const leftoverTablets = totalTablets % tabletsPerBlister;
+
+                resultMessage = `<p>El paciente necesita <strong>${totalTablets} comprimidos</strong> en total para ${days} días.</p>`;
+                resultMessage += `<p>Esto equivale a <strong>${fullBlisters} blisters completos</strong> y <strong>${leftoverTablets} pastillas sueltas</strong>.</p>`;
+            }
+
+            document.getElementById('result').innerHTML = resultMessage;
+        });
+    </script>
+
+</body>
+</html>
+
